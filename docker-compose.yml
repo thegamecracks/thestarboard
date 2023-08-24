@@ -4,9 +4,37 @@ services:
       context: .
       target: prod
     command: ["--config-file", "/run/secrets/app_config"]
+    depends_on:
+      db:
+        condition: service_healthy
     secrets:
       - app_config
+      - db_passwd
+  db:
+    # https://github.com/docker-library/docs/blob/master/postgres/README.md
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_passwd
+    expose:
+      - "5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "--quiet", "--username", "postgres"]
+      interval: 2s
+      timeout: 1s
+      retries: 5
+    restart: always
+    secrets:
+      - db_passwd
+    volumes:
+      - type: volume
+        source: db
+        target: /var/lib/postgresql/data
+
+volumes:
+  db:
 
 secrets:
   app_config:
     file: config.toml
+  db_passwd:
+    environment: PGPASSWORD
