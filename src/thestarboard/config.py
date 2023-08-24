@@ -13,7 +13,6 @@ if TYPE_CHECKING:
 
 _package_files = importlib.resources.files(__package__)
 CONFIG_DEFAULT_RESOURCE = _package_files.joinpath("config_default.toml")
-CONFIG_PATH = Path("config.toml")
 
 
 class _BaseModel(BaseModel):
@@ -88,7 +87,7 @@ def load_default_config() -> Settings:
     return Settings.model_validate(data)
 
 
-def load_config(*, merge_default: bool = True) -> Settings:
+def load_config(path: Path, *, merge_default: bool = True) -> Settings:
     """Loads the bot configuration file.
 
     :param merge_default:
@@ -103,10 +102,10 @@ def load_config(*, merge_default: bool = True) -> Settings:
 
     """
     if not merge_default:
-        data = _load_raw_config(CONFIG_PATH)
-    elif CONFIG_PATH.exists():
+        data = _load_raw_config(path)
+    elif path.exists():
         data = _load_raw_config(CONFIG_DEFAULT_RESOURCE)
-        overwrites = _load_raw_config(CONFIG_PATH)
+        overwrites = _load_raw_config(path)
         _recursive_update(data, overwrites)
     else:
         data = _load_raw_config(CONFIG_DEFAULT_RESOURCE)

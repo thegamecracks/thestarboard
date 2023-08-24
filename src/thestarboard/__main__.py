@@ -2,6 +2,7 @@ import argparse
 import importlib.metadata
 import logging
 import sys
+from pathlib import Path
 
 import discord
 
@@ -19,8 +20,16 @@ parser.add_argument(
     default=0,
     help="Increase logging verbosity",
 )
+parser.add_argument(
+    "--config-file",
+    default="config.toml",
+    help="The config file to load",
+    required=True,
+    type=Path,
+)
 
 args = parser.parse_args()
+config_file: Path = args.config_file
 
 root_level = logging.INFO
 if args.verbose > 0:
@@ -35,7 +44,7 @@ discord.utils.setup_logging(
     root=True,
 )
 
-config = load_config()
+config = load_config(config_file)
 
 if config.bot.token == "":
     sys.exit(
