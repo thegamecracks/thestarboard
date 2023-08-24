@@ -3,7 +3,6 @@ from discord import app_commands
 from discord.ext import commands
 
 from ..bot import Context, Bot
-from ..config import load_config
 
 
 def count_localizations(command: app_commands.AppCommand) -> int:
@@ -35,7 +34,7 @@ class Owner(commands.Cog):
     @commands.command(name="reload-config", aliases=["config-reload"])
     async def reload_config(self, ctx: Context):
         """Reload the bot's configuration."""
-        self.bot.config = load_config()
+        self.bot.refresh_config()
         await ctx.reply("Config reloaded!")
 
     @commands.command(name="sync")

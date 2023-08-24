@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import importlib.metadata
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable
 
 from discord.ext import commands
 
@@ -16,13 +16,15 @@ log = logging.getLogger(__name__)
 
 # https://discordpy.readthedocs.io/en/stable/ext/commands/api.html
 class Bot(commands.Bot):
-    def __init__(self, config: Settings):
+    def __init__(self, config_refresher: Callable[[], Settings]):
+        self._config_refresher = config_refresher
+        config = self.refresh_config()
+
         super().__init__(
             command_prefix=commands.when_mentioned,
             intents=config.bot.intents.create_intents(),
             strip_after_prefix=True,
         )
-        self.config = config
 
     async def _maybe_load_jishaku(self) -> None:
         if not self.config.bot.allow_jishaku:
@@ -35,6 +37,11 @@ class Bot(commands.Bot):
         else:
             await self.load_extension("jishaku")
             log.info("Loaded jishaku extension (version: %s)", version)
+
+    def refresh_config(self) -> Settings:
+        config = self._config_refresher()
+        self.config = config
+        return config
 
     async def setup_hook(self) -> None:
         for path in self.config.bot.extensions:

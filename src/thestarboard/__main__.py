@@ -1,4 +1,5 @@
 import argparse
+import functools
 import importlib.metadata
 import logging
 import sys
@@ -44,17 +45,16 @@ discord.utils.setup_logging(
     root=True,
 )
 
-config = load_config(config_file)
+bot = Bot(functools.partial(load_config, config_file))
 
-if config.bot.token == "":
+if bot.config.bot.token == "":
     sys.exit(
         "No bot token has been supplied by the config file.\n"
         "Please get a Bot Token from https://discord.com/developers/applications "
         "and add it to your configuration."
     )
 
-bot = Bot(config)
 bot.run(
-    config.bot.token,
+    bot.config.bot.token,
     log_handler=None,
 )
