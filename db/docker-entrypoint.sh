@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Original: https://github.com/docker-library/postgres/blob/master/15/alpine3.18/docker-entrypoint.sh
 set -Eeo pipefail
 # TODO swap to -Eeuo pipefail above (after handling all potentially-unset variables)
 
@@ -317,27 +318,29 @@ _main() {
 
 			docker_init_database_dir
 			pg_setup_hba_conf "$@"
-
-			# PGPASSWORD is required for psql when authentication is required for 'local' connections via pg_hba.conf and is otherwise harmless
-			# e.g. when '--auth=md5' or '--auth-local=md5' is used in POSTGRES_INITDB_ARGS
-			export PGPASSWORD="${PGPASSWORD:-$POSTGRES_PASSWORD}"
-			docker_temp_server_start "$@"
-
-			docker_setup_db
-			docker_process_init_files /docker-entrypoint-initdb.d/*
-
-			docker_temp_server_stop
-			unset PGPASSWORD
-
-			cat <<-'EOM'
-
-				PostgreSQL init process complete; ready for start up.
-
-			EOM
 		else
 			cat <<-'EOM'
 
-				PostgreSQL Database directory appears to contain a database; Skipping initialization
+				PostgreSQL Database directory appears to contain a database; Only running init scripts
+
+			EOM
+		fi
+
+        # PGPASSWORD is required for psql when authentication is required for 'local' connections via pg_hba.conf and is otherwise harmless
+        # e.g. when '--auth=md5' or '--auth-local=md5' is used in POSTGRES_INITDB_ARGS
+        export PGPASSWORD="${PGPASSWORD:-$POSTGRES_PASSWORD}"
+        docker_temp_server_start "$@"
+
+        docker_setup_db
+        docker_process_init_files /docker-entrypoint-initdb.d/*
+
+        docker_temp_server_stop
+        unset PGPASSWORD
+
+        if [ -z "$DATABASE_ALREADY_EXISTS" ]; then
+			cat <<-'EOM'
+
+				PostgreSQL init process complete; ready for start up.
 
 			EOM
 		fi
