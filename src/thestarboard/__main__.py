@@ -48,7 +48,7 @@ config = load_config(config_file)
 
 if config.bot.token == "":
     sys.exit(
-        "No bot token has been supplied by a config.toml file.\n"
+        "No bot token has been supplied by the config file.\n"
         "Please get a Bot Token from https://discord.com/developers/applications "
         "and add it to your configuration."
     )
