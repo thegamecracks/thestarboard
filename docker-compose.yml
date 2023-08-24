@@ -11,8 +11,7 @@ services:
       - app_config
       - db_passwd
   db:
-    # https://github.com/docker-library/docs/blob/master/postgres/README.md
-    image: postgres:15-alpine
+    build: db
     environment:
       POSTGRES_PASSWORD_FILE: /run/secrets/db_passwd
     expose:
@@ -29,6 +28,10 @@ services:
       - type: volume
         source: db
         target: /var/lib/postgresql/data
+      - type: bind
+        source: ./db/migrations
+        target: /docker-entrypoint-initdb.d
+        read_only: true
 
 volumes:
   db:
