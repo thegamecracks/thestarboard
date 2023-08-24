@@ -1,0 +1,13 @@
+# Full schema defined in /src/thestarboard/config.py
+
+[bot]
+token = ""
+extensions = [
+    ".cogs.owner",
+]
+allow_jishaku = true
+
+[bot.intents]
+# https://discordpy.readthedocs.io/en/stable/api.html#intents
+# All default intents are enabled but can be modified here
+# message_content = true
