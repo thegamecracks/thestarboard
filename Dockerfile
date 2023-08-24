@@ -26,4 +26,4 @@ RUN pip install --no-build-isolation --no-index .
 
 FROM project AS prod
 
-CMD ["python", "-m", "thestarboard"]
+ENTRYPOINT ["python", "-m", "thestarboard"]

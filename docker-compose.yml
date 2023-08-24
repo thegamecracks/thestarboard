@@ -3,3 +3,10 @@ services:
     build:
       context: .
       target: prod
+    command: ["--config-file", "/run/secrets/app_config"]
+    secrets:
+      - app_config
+
+secrets:
+  app_config:
+    file: config.toml
