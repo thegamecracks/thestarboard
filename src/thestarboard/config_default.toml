@@ -14,6 +14,6 @@ allow_jishaku = true
 
 [db]
 # postgres://user:password@host:port/database?option=value
-dsn = "postgres://db"
+dsn = "postgres://postgres@db"
 # Optional file to read password from
 password_file = "/run/secrets/db_passwd"
