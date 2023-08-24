@@ -11,3 +11,9 @@ allow_jishaku = true
 # https://discordpy.readthedocs.io/en/stable/api.html#intents
 # All default intents are enabled but can be modified here
 # message_content = true
+
+[db]
+# postgres://user:password@host:port/database?option=value
+dsn = "postgres://db"
+# Optional file to read password from
+password_file = "/run/secrets/db_passwd"

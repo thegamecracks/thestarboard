@@ -4,6 +4,7 @@ import importlib.metadata
 import logging
 from typing import TYPE_CHECKING, Callable
 
+import asyncpg
 from discord.ext import commands
 
 from .translator import GettextTranslator
@@ -16,6 +17,8 @@ log = logging.getLogger(__name__)
 
 # https://discordpy.readthedocs.io/en/stable/ext/commands/api.html
 class Bot(commands.Bot):
+    pool: asyncpg.Pool
+
     def __init__(self, config_refresher: Callable[[], Settings]):
         self._config_refresher = config_refresher
         config = self.refresh_config()
@@ -50,6 +53,11 @@ class Bot(commands.Bot):
         await self._maybe_load_jishaku()
 
         await self.tree.set_translator(GettextTranslator())
+
+    async def start(self, *args, **kwargs) -> None:
+        async with self.config.db.create_pool() as pool:
+            self.pool = pool
+            return await super().start(*args, **kwargs)
 
 
 class Context(commands.Context[Bot]):

@@ -1,14 +1,16 @@
 from __future__ import annotations
 
+import contextlib
 import importlib.resources
 import io
 import tomllib
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Literal, Protocol
+from typing import TYPE_CHECKING, Any, AsyncGenerator, Literal, Protocol
 
 from pydantic import BaseModel
 
 if TYPE_CHECKING:
+    import asyncpg
     import discord
 
 _package_files = importlib.resources.files(__package__)
@@ -23,6 +25,7 @@ class _BaseModel(BaseModel):
 # https://docs.pydantic.dev/usage/settings/
 class Settings(_BaseModel):
     bot: SettingsBot
+    db: SettingsDB
 
 
 class SettingsBot(_BaseModel):
@@ -50,6 +53,32 @@ class SettingsBotIntents(_BaseModel):
         intents = dict(discord.Intents.default())
         intents |= self.model_dump()
         return discord.Intents(**intents)
+
+
+class SettingsDB(_BaseModel):
+    dsn: str
+    """The data source name used for connecting to the database.
+
+    Should be in the format::
+
+        postgres://user:password@host:port/database?option=value
+
+    """
+    password_file: str
+    """An optional file to read the database password from."""
+
+    @contextlib.asynccontextmanager
+    async def create_pool(self) -> AsyncGenerator[asyncpg.Pool, None]:
+        import asyncpg
+
+        kwargs = {
+            "dsn": self.dsn,
+        }
+        if self.password_file != "":
+            kwargs["password"] = Path(self.password_file).read_text(encoding="utf-8")
+
+        async with asyncpg.create_pool(**kwargs) as pool:
+            yield pool
 
 
 Settings.model_rebuild()
