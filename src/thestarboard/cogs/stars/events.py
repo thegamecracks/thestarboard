@@ -74,7 +74,10 @@ class StarboardEvents(commands.Cog):
         print("message deleted")
 
     @commands.Cog.listener("on_raw_bulk_message_delete")
-    async def bulk_delete_starboard_messages(self, payload: discord.RawBulkMessageDeleteEvent):
+    async def bulk_delete_starboard_messages(
+        self,
+        payload: discord.RawBulkMessageDeleteEvent,
+    ):
         """Bulk deletes the associated starboard messages."""
         # Check if guild setting is enabled
         # Fetch starboard messages
