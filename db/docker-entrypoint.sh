@@ -161,6 +161,12 @@ docker_process_init_files() {
 
 	printf '\n'
 	local f
+
+	# Unlike the original image, we're ignoring all script errors.
+	# Preferably migration scripts wouldn't error if the migration
+	# was already ran, but this is the most convenient way to handle it.
+	set +e
+
 	for f; do
 		case "$f" in
 			*.sh)
@@ -182,6 +188,8 @@ docker_process_init_files() {
 		esac
 		printf '\n'
 	done
+
+	set -e
 }
 
 # Execute sql script, passed via stdin (or -f flag of pqsl)
