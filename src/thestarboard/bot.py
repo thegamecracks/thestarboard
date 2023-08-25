@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Callable
 import asyncpg
 from discord.ext import commands
 
+from .database import DatabaseClient
 from .translator import GettextTranslator
 
 if TYPE_CHECKING:
@@ -18,6 +19,7 @@ log = logging.getLogger(__name__)
 # https://discordpy.readthedocs.io/en/stable/ext/commands/api.html
 class Bot(commands.Bot):
     pool: asyncpg.Pool
+    query: DatabaseClient
 
     def __init__(self, config_refresher: Callable[[], Settings]):
         self._config_refresher = config_refresher
@@ -57,6 +59,7 @@ class Bot(commands.Bot):
     async def start(self, *args, **kwargs) -> None:
         async with self.config.db.create_pool() as pool:
             self.pool = pool
+            self.query = DatabaseClient(pool)
             return await super().start(*args, **kwargs)
 
 
