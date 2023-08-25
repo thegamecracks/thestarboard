@@ -4,6 +4,7 @@
 token = ""
 extensions = [
     ".cogs.owner",
+    ".cogs.stars",
 ]
 allow_jishaku = true
 
