@@ -17,3 +17,6 @@ allow_jishaku = true
 dsn = "postgres://postgres@db"
 # Optional file to read password from
 password_file = "/run/secrets/db_passwd"
+
+[starboard]
+allowed_emojis = ["⭐", "🌟", "🌠", "🤩", "💫", "✨"]

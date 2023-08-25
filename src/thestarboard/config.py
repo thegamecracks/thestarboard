@@ -26,6 +26,7 @@ class _BaseModel(BaseModel):
 class Settings(_BaseModel):
     bot: SettingsBot
     db: SettingsDB
+    starboard: SettingsStarboard
 
 
 class SettingsBot(_BaseModel):
@@ -79,6 +80,11 @@ class SettingsDB(_BaseModel):
 
         async with asyncpg.create_pool(**kwargs) as pool:
             yield pool
+
+
+class SettingsStarboard(_BaseModel):
+    allowed_emojis: list[str]
+    """A list of emojis eligible for the starboard."""
 
 
 Settings.model_rebuild()
