@@ -1,28 +1,63 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+import contextlib
+from contextvars import ContextVar
+from typing import TYPE_CHECKING, AsyncGenerator, Self
 
 from .cache import CacheSet, ExpiringMemoryCacheSet
 
 if TYPE_CHECKING:
     import asyncpg
 
+_current_conn: ContextVar[asyncpg.Connection] = ContextVar("_current_conn")
+
 
 class DatabaseClient:
-    """Provides an API for making common queries with an :class:`asyncpg.Connection`.
-
-    Transactions are not handled by this class.
-
-    """
+    """Provides an API for making common queries with an :class:`asyncpg.Connection`."""
 
     def __init__(
         self,
-        conn: asyncpg.Connection,
+        pool: asyncpg.Pool,
         *,
         cache: CacheSet | None = None,
     ) -> None:
-        self.conn = conn
+        self.pool = pool
         self.cache: CacheSet = cache or ExpiringMemoryCacheSet(expires_after=1800)
+
+    @property
+    def conn(self) -> asyncpg.Connection:
+        """Returns the current connection used by the query client.
+
+        This is set by the :meth:`acquire()` method on a per-context basis.
+
+        """
+        try:
+            return _current_conn.get()
+        except LookupError:
+            raise RuntimeError(
+                "acquire() async context manager must be entered before "
+                "running SQL statements"
+            ) from None
+
+    @contextlib.asynccontextmanager
+    async def acquire(self, *, transaction: bool = True) -> AsyncGenerator[Self, None]:
+        """Acquires a connection from the pool to be used by the client.
+
+        :param transaction: If True, a transaction is opened as well.
+
+        """
+        async with self.pool.acquire() as conn:
+            if transaction:
+                transaction_manager = conn.transaction()
+            else:
+                transaction_manager = contextlib.nullcontext()
+
+            async with transaction_manager:
+                token = _current_conn.set(conn)
+                try:
+                    yield self
+                finally:
+                    _current_conn.reset(token)
 
     def _cache_key(self, bucket: str, id_: str | int) -> str:
         return f"{bucket}-{id_}"
