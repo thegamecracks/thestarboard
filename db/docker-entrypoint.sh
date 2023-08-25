@@ -162,11 +162,6 @@ docker_process_init_files() {
 	printf '\n'
 	local f
 
-	# Unlike the original image, we're ignoring all script errors.
-	# Preferably migration scripts wouldn't error if the migration
-	# was already ran, but this is the most convenient way to handle it.
-	set +e
-
 	for f; do
 		case "$f" in
 			*.sh)
@@ -188,8 +183,6 @@ docker_process_init_files() {
 		esac
 		printf '\n'
 	done
-
-	set -e
 }
 
 # Execute sql script, passed via stdin (or -f flag of pqsl)
@@ -340,7 +333,18 @@ _main() {
         docker_temp_server_start "$@"
 
         docker_setup_db
-        docker_process_init_files /docker-entrypoint-initdb.d/*
+
+		if [ "$DATABASE_ALREADY_EXISTS" ]; then
+			# Unlike the original image, we're ignoring all script errors
+			# after initialization.
+			# Preferably migration scripts wouldn't error if the migration
+			# was already ran, but this is the most convenient way to handle it.
+			set +e
+			docker_process_init_files /docker-entrypoint-initdb.d/*
+			set -e
+		else
+			docker_process_init_files /docker-entrypoint-initdb.d/*
+		fi
 
         docker_temp_server_stop
         unset PGPASSWORD
