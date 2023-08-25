@@ -21,7 +21,7 @@ multidict==6.0.4
 mypy-extensions==1.0.0
 packaging==23.1
 pathspec==0.11.2
-pip==23.1.2
+pip==23.2.1
 platformdirs==3.10.0
 pydantic==2.3.0
 pydantic_core==2.6.3
