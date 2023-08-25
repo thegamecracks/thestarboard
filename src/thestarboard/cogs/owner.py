@@ -2,7 +2,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-from ..bot import Context, Bot
+from thestarboard.bot import Context, Bot
 
 
 def count_localizations(command: app_commands.AppCommand) -> int:
