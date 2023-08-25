@@ -172,7 +172,7 @@ class DatabaseClient:
         await self.add_message(message_id, channel_id, user_id, guild_id=guild_id)
         await self.conn.execute(
             "INSERT INTO message_star (message_id, user_id, emoji) "
-            "VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING",
+            "VALUES ($1, $2, $3) ON CONFLICT DO NOTHING",
             message_id,
             user_id,
             emoji,
