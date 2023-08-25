@@ -12,6 +12,11 @@ services:
       - db_passwd
   db:
     build: db
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        window: 30s
     environment:
       POSTGRES_PASSWORD_FILE: /run/secrets/db_passwd
     expose:
@@ -21,7 +26,6 @@ services:
       interval: 2s
       timeout: 1s
       retries: 5
-    restart: always
     secrets:
       - db_passwd
     volumes:
