@@ -26,4 +26,5 @@ RUN pip install --no-build-isolation --no-index .
 
 FROM project AS prod
 
-ENTRYPOINT ["python", "-m", "thestarboard"]
+# -u for PYTHONUNBUFFERED; prints won't be shown otherwise
+ENTRYPOINT ["python", "-u", "-m", "thestarboard"]
