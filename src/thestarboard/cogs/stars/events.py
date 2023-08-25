@@ -17,7 +17,15 @@ class StarboardEvents(commands.Cog):
         if not self._is_star_emoji(payload.emoji.name):
             return
 
-        # Add guild/channel/message/star
+        async with self.bot.query.acquire() as query:
+            await query.add_message_star(
+                payload.message_id,
+                payload.user_id,
+                payload.emoji.name,
+                channel_id=payload.channel_id,
+                guild_id=payload.guild_id,
+            )
+
         # Send/edit starboard message as necessary
         print("reaction added")
 
@@ -27,7 +35,13 @@ class StarboardEvents(commands.Cog):
         if not self._is_star_emoji(payload.emoji.name):
             return
 
-        # Delete star from message
+        async with self.bot.query.acquire() as query:
+            await query.remove_message_star(
+                payload.message_id,
+                payload.user_id,
+                payload.emoji.name,
+            )
+
         # Edit starboard message as necessary
         print("reaction removed")
 
