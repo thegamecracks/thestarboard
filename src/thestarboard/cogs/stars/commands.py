@@ -78,3 +78,5 @@ class StarboardCommands(commands.Cog):
             if channel_set:
                 content = content.format(f"<#{channel_id}>")
             await interaction.response.send_message(content, ephemeral=True)
+
+    # TODO: /config set-threshold
