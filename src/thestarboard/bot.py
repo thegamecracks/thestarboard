@@ -8,6 +8,7 @@ import asyncpg
 from discord.ext import commands
 
 from .database import DatabaseClient
+from .partials import PartialResolver
 from .translator import GettextTranslator
 
 if TYPE_CHECKING:
@@ -30,6 +31,8 @@ class Bot(commands.Bot):
             intents=config.bot.intents.create_intents(),
             strip_after_prefix=True,
         )
+
+        self.resolve = PartialResolver(self)
 
     async def _maybe_load_jishaku(self) -> None:
         if not self.config.bot.allow_jishaku:
