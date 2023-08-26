@@ -189,10 +189,15 @@ class TreeErrorHandler(ErrorHandler[discord.Interaction]):
             return error.__cause__
 
     async def send(self, interaction: discord.Interaction, content: str) -> None:
+        kwargs = {
+            "content": content,
+            "allowed_mentions": discord.AllowedMentions.none(),
+            "ephemeral": True,
+        }
         if interaction.response.is_done():
-            await interaction.followup.send(content, ephemeral=True)
+            await interaction.followup.send(**kwargs)
         else:
-            await interaction.response.send_message(content, ephemeral=True)
+            await interaction.response.send_message(**kwargs)
 
     def should_handle(
         self,
