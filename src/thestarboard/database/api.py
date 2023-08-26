@@ -24,6 +24,8 @@ class DatabaseClient:
         self.pool = pool
         self.cache: CacheSet = cache or ExpiringMemoryCacheSet(expires_after=1800)
 
+    # Connection methods
+
     @property
     def conn(self) -> asyncpg.Connection:
         """Returns the current connection used by the query client.
@@ -59,16 +61,7 @@ class DatabaseClient:
                 finally:
                     _current_conn.reset(token)
 
-    def _cache_key(self, bucket: str, id_: str | int) -> str:
-        return f"{bucket}-{id_}"
-
-    async def _try_cache_add(self, bucket: str, id_: str | int) -> bool:
-        key = self._cache_key(bucket, id_)
-        if await self.cache.exists(key):
-            return False
-
-        await self.cache.add(key)
-        return True
+    # Guild methods
 
     async def add_guild(self, guild_id: int) -> None:
         """Inserts the given guild ID into the database.
@@ -83,6 +76,8 @@ class DatabaseClient:
             "INSERT INTO guild (id) VALUES ($1) ON CONFLICT DO NOTHING",
             guild_id,
         )
+
+    # Channel methods
 
     async def add_channel(
         self,
@@ -108,6 +103,8 @@ class DatabaseClient:
             guild_id,
         )
 
+    # User methods
+
     async def add_user(self, user_id: int) -> None:
         """Inserts the given user ID into the database.
 
@@ -121,6 +118,8 @@ class DatabaseClient:
             'INSERT INTO "user" (id) VALUES ($1) ON CONFLICT DO NOTHING',
             user_id,
         )
+
+    # Message methods
 
     async def add_message(
         self,
@@ -150,6 +149,8 @@ class DatabaseClient:
             channel_id,
             user_id,
         )
+
+    # Message star methods
 
     async def add_message_star(
         self,
@@ -198,6 +199,8 @@ class DatabaseClient:
             emoji,
         )
 
+    # Starboard configuration methods
+
     async def set_starboard_channel(
         self,
         channel_id: int | None,
@@ -228,3 +231,16 @@ class DatabaseClient:
             )
 
         return original_channel_id
+
+    # Internal methods
+
+    def _cache_key(self, bucket: str, id_: str | int) -> str:
+        return f"{bucket}-{id_}"
+
+    async def _try_cache_add(self, bucket: str, id_: str | int) -> bool:
+        key = self._cache_key(bucket, id_)
+        if await self.cache.exists(key):
+            return False
+
+        await self.cache.add(key)
+        return True
