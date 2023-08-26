@@ -25,7 +25,6 @@ parser.add_argument(
     "--config-file",
     default="config.toml",
     help="The config file to load",
-    required=True,
     type=Path,
 )
 
