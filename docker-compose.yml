@@ -10,7 +10,9 @@ services:
     secrets:
       - app_config
       - db_passwd
+
   db:
+    # https://github.com/docker-library/docs/blob/master/postgres/README.md
     build: db
     deploy:
       restart_policy:
