@@ -39,8 +39,29 @@ services:
         target: /docker-entrypoint-initdb.d
         read_only: true
 
+  dbadmin:
+    # https://www.pgadmin.org/docs/pgadmin4/latest/container_deployment.html
+    image: dpage/pgadmin4
+    depends_on:
+      db:
+        condition: service_healthy
+    deploy:
+      restart_policy:
+        condition: any
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL:?}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD:?}
+    ports:
+      - "5433:80"
+    restart: always
+    volumes:
+      - type: volume
+        source: dbadmin
+        target: /var/lib/pgadmin
+
 volumes:
   db:
+  dbadmin:
 
 secrets:
   app_config:
