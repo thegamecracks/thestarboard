@@ -13,7 +13,8 @@ FROM python:3.11-alpine AS project-install-deps
 
 COPY --from=project-download-deps pip-deps/ pip-deps/
 # --no-index to avoid network resolution; missing wheels should be errors
-RUN pip install --no-index pip-deps/*
+RUN pip install --no-index pip-deps/* \
+    && rm -r pip-deps
 
 FROM project-install-deps AS project
 
