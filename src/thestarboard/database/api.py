@@ -90,7 +90,7 @@ class DatabaseClient:
         Missing guilds are automatically inserted.
 
         """
-        if not await self._try_cache_add("channel", channel_id):
+        if not await self._try_cache_add("channel", f"{channel_id}-{guild_id}"):
             return
 
         if guild_id is not None:
@@ -98,7 +98,8 @@ class DatabaseClient:
 
         await self.conn.execute(
             "INSERT INTO channel (id, guild_id) VALUES ($1, $2) "
-            "ON CONFLICT DO NOTHING",
+            "ON CONFLICT (id) DO UPDATE SET\n"
+            "    guild_id = COALESCE(excluded.guild_id, channel.guild_id)",
             channel_id,
             guild_id,
         )
@@ -137,14 +138,19 @@ class DatabaseClient:
         Missing users are automatically inserted.
 
         """
-        if not await self._try_cache_add("message", message_id):
+        if not await self._try_cache_add(
+            "message",
+            f"{message_id}-{channel_id}-{user_id}",
+        ):
             return
 
         await self.add_channel(channel_id, guild_id)
         await self.add_user(user_id)
         await self.conn.execute(
             "INSERT INTO message (id, channel_id, user_id) VALUES ($1, $2, $3) "
-            "ON CONFLICT DO NOTHING",
+            "ON CONFLICT (id) DO UPDATE SET\n"
+            "    channel_id = excluded.channel_id,\n"
+            "    user_id = excluded.user_id",
             message_id,
             channel_id,
             user_id,
