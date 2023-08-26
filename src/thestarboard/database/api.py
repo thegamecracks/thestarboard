@@ -251,18 +251,21 @@ class DatabaseClient:
             guild_id,
         )
 
-    async def get_starboard_threshold(self, guild_id: int) -> int | None:
+    async def get_starboard_threshold(self, guild_id: int) -> int:
         """Gets a guild's starboard threshold.
 
         Missing guilds are automatically inserted.
 
         """
         await self.add_guild(guild_id)
-        return await self.conn.fetchval(
+        threshold = await self.conn.fetchval(
             "SELECT starboard_threshold FROM starboard_guild_config "
             "WHERE guild_id = $1",
             guild_id,
         )
+        # starboard_guild_config_trigger should guarantee this
+        assert threshold is not None
+        return threshold
 
     async def set_starboard_threshold(
         self,
