@@ -26,6 +26,10 @@ class StarboardCommands(commands.Cog):
         # Subcommand description (/config set-channel)
         description=_("Sets the starboard channel to send messages to."),
     )
+    @app_commands.rename(
+        # Subcommand parameter name (/config set-channel [channel])
+        channel=_("channel"),
+    )
     @app_commands.describe(
         # Subcommand parameter description (/config set-channel [channel])
         channel=_("The channel to send starboard messages to."),
