@@ -201,6 +201,19 @@ class DatabaseClient:
 
     # Starboard configuration methods
 
+    async def get_starboard_channel(self, guild_id: int) -> int | None:
+        """Gets a guild's starboard channel.
+
+        Missing guilds are automatically inserted.
+
+        """
+        await self.add_guild(guild_id)
+        return await self.conn.fetchval(
+            "SELECT starboard_channel_id FROM starboard_guild_config "
+            "WHERE guild_id = $1",
+            guild_id,
+        )
+
     async def set_starboard_channel(
         self,
         channel_id: int | None,
