@@ -117,17 +117,17 @@ CREATE OR REPLACE FUNCTION public.message_star_total_trigger_function()
     VOLATILE NOT LEAKPROOF
 AS $BODY$
 BEGIN
-	IF TG_OP IN ('UPDATE', 'DELETE') THEN
-		UPDATE message_star_total SET total = total - 1
-		WHERE message_id = old.message_id AND channel_id = old.channel_id;
-		-- NOTE: message_star_total is not automatically deleted here
-	END IF;
-	IF TG_OP IN ('INSERT', 'UPDATE') THEN
-		INSERT INTO message_star_total (message_id, channel_id, total)
-		VALUES (new.message_id, new.channel_id, 1)
-		ON CONFLICT DO UPDATE SET total = total + 1;
-	END IF;
-	RETURN NULL;
+    IF TG_OP IN ('UPDATE', 'DELETE') THEN
+        UPDATE message_star_total SET total = total - 1
+        WHERE message_id = old.message_id AND channel_id = old.channel_id;
+        -- NOTE: message_star_total is not automatically deleted here
+    END IF;
+    IF TG_OP IN ('INSERT', 'UPDATE') THEN
+        INSERT INTO message_star_total (message_id, channel_id, total)
+        VALUES (new.message_id, new.channel_id, 1)
+        ON CONFLICT DO UPDATE SET total = total + 1;
+    END IF;
+    RETURN NULL;
 END
 $BODY$;
 
