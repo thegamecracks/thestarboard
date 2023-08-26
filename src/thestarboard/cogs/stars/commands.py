@@ -52,10 +52,11 @@ class StarboardCommands(commands.Cog):
                 channel_id = None
                 guild_id = interaction.guild.id
 
-            original_channel_id = await query.set_starboard_channel(
-                channel_id,
-                guild_id=guild_id,
-            )
+            original_channel_id = await query.get_starboard_channel(guild_id)
+            channel_changed = channel_id != original_channel_id
+
+            if channel_changed:
+                await query.set_starboard_channel(channel_id, guild_id=guild_id)
 
             responses: dict[tuple[bool, bool], _] = {
                 # Response from /config set-channel
@@ -68,13 +69,9 @@ class StarboardCommands(commands.Cog):
                 (False, False): _("There is already no starboard channel set!"),
             }
 
-            channel_changed = channel_id != original_channel_id
             channel_set = channel_id is not None
             response_key = responses[channel_changed, channel_set]
-            content = await translate(
-                response_key,
-                interaction
-            )
+            content = await translate(response_key, interaction)
             if channel_set:
                 content = content.format(f"<#{channel_id}>")
             await interaction.response.send_message(content, ephemeral=True)

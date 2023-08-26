@@ -219,8 +219,8 @@ class DatabaseClient:
         channel_id: int | None,
         *,
         guild_id: int,
-    ) -> int | None:
-        """Sets a guild's starboard channel, returning the original value.
+    ) -> None:
+        """Sets a guild's starboard channel.
 
         Missing channels are automatically inserted.
         Missing guilds are automatically inserted.
@@ -229,21 +229,12 @@ class DatabaseClient:
         if channel_id is not None:
             await self.add_channel(channel_id, guild_id=guild_id)
 
-        original_channel_id = await self.conn.fetchval(
-            "SELECT starboard_channel_id FROM starboard_guild_config "
-            "WHERE guild_id = $1",
+        await self.conn.execute(
+            "UPDATE starboard_guild_config SET starboard_channel_id = $1 "
+            "WHERE guild_id = $2",
+            channel_id,
             guild_id,
         )
-
-        if original_channel_id != channel_id:
-            await self.conn.execute(
-                "UPDATE starboard_guild_config SET starboard_channel_id = $1 "
-                "WHERE guild_id = $2",
-                channel_id,
-                guild_id,
-            )
-
-        return original_channel_id
 
     # Internal methods
 
