@@ -14,6 +14,8 @@ class StarboardEvents(commands.Cog):
     @commands.Cog.listener("on_raw_reaction_add")
     async def add_star_reaction(self, payload: discord.RawReactionActionEvent):
         """Adds a single message star."""
+        if payload.guild_id is None:
+            return
         if not self._is_star_emoji(payload.emoji.name):
             return
 
@@ -32,6 +34,8 @@ class StarboardEvents(commands.Cog):
     @commands.Cog.listener("on_raw_reaction_remove")
     async def remove_star_reaction(self, payload: discord.RawReactionActionEvent):
         """Removes a single message star."""
+        if payload.guild_id is None:
+            return
         if not self._is_star_emoji(payload.emoji.name):
             return
 
@@ -48,6 +52,8 @@ class StarboardEvents(commands.Cog):
     @commands.Cog.listener("on_raw_reaction_clear")
     async def clear_star_reactions(self, payload: discord.RawReactionClearEvent):
         """Removes all stars associated with the message."""
+        if payload.guild_id is None:
+            return
         # Delete all stars from message
         # Edit starboard message as necessary
         print("reactions cleared")
@@ -58,6 +64,8 @@ class StarboardEvents(commands.Cog):
         payload: discord.RawReactionClearEmojiEvent,
     ):
         """Removes all stars of an emoji associated with the message."""
+        if payload.guild_id is None:
+            return
         if not self._is_star_emoji(payload.emoji.name):
             return
 
@@ -68,6 +76,8 @@ class StarboardEvents(commands.Cog):
     @commands.Cog.listener("on_raw_message_delete")
     async def delete_starboard_message(self, payload: discord.RawMessageDeleteEvent):
         """Deletes the associated starboard message."""
+        if payload.guild_id is None:
+            return
         # Check if guild setting is enabled
         # Fetch starboard message
         # Delete starboard message
@@ -79,6 +89,8 @@ class StarboardEvents(commands.Cog):
         payload: discord.RawBulkMessageDeleteEvent,
     ):
         """Bulk deletes the associated starboard messages."""
+        if payload.guild_id is None:
+            return
         # Check if guild setting is enabled
         # Fetch starboard messages
         # Delete starboard messages
@@ -87,6 +99,8 @@ class StarboardEvents(commands.Cog):
     @commands.Cog.listener("on_raw_message_edit")
     async def edit_starboard_message(self, payload: discord.RawMessageUpdateEvent):
         """Updates the starboard message."""
+        if payload.guild_id is None:
+            return
         # Check if guild setting is enabled
         # Fetch starboard message
         # Edit starboard message
