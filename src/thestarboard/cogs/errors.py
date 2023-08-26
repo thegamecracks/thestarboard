@@ -194,7 +194,12 @@ class TreeErrorHandler(ErrorHandler[discord.Interaction]):
         else:
             await interaction.response.send_message(content, ephemeral=True)
 
-    def should_handle(self, interaction: discord.Interaction, error: Exception, /) -> bool:
+    def should_handle(
+        self,
+        interaction: discord.Interaction,
+        error: Exception,
+        /,
+    ) -> bool:
         return not interaction.extras.get("handled", False)
 
 
