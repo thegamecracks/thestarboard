@@ -82,6 +82,7 @@ class DatabaseClient:
     async def add_channel(
         self,
         channel_id: int,
+        *,
         guild_id: int | None = None,
     ) -> None:
         """Inserts the given channel ID into the database.
@@ -144,7 +145,7 @@ class DatabaseClient:
         ):
             return
 
-        await self.add_channel(channel_id, guild_id)
+        await self.add_channel(channel_id, guild_id=guild_id)
         await self.add_user(user_id)
         await self.conn.execute(
             "INSERT INTO message (id, channel_id, user_id) VALUES ($1, $2, $3) "
