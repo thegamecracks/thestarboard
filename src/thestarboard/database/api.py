@@ -199,6 +199,14 @@ class DatabaseClient:
             emoji,
         )
 
+    async def get_message_star_total(self, message_id: int) -> int:
+        """Gets a message's star total."""
+        total = await self.conn.fetchval(
+            "SELECT total FROM message_star_total WHERE message_id = $1",
+            message_id,
+        )
+        return total or 0
+
     # Starboard configuration methods
 
     async def get_starboard_channel(self, guild_id: int) -> int | None:
