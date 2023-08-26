@@ -236,6 +236,38 @@ class DatabaseClient:
             guild_id,
         )
 
+    async def get_starboard_threshold(self, guild_id: int) -> int | None:
+        """Gets a guild's starboard threshold.
+
+        Missing guilds are automatically inserted.
+
+        """
+        await self.add_guild(guild_id)
+        return await self.conn.fetchval(
+            "SELECT starboard_threshold FROM starboard_guild_config "
+            "WHERE guild_id = $1",
+            guild_id,
+        )
+
+    async def set_starboard_threshold(
+        self,
+        threshold: int,
+        *,
+        guild_id: int,
+    ) -> None:
+        """Sets a guild's starboard threshold.
+
+        Missing guilds are automatically inserted.
+
+        """
+        await self.add_guild(guild_id)
+        await self.conn.execute(
+            "UPDATE starboard_guild_config SET starboard_threshold = $1 "
+            "WHERE guild_id = $2",
+            threshold,
+            guild_id,
+        )
+
     # Internal methods
 
     def _cache_key(self, bucket: str, id_: str | int) -> str:
