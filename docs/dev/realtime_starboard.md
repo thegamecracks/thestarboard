@@ -1,5 +1,11 @@
 # Real-Time Starboard
 
+This document is here for future design decisions to make the bot more effective
+at scaling.
+As of now, the [current implementation](/src/thestarboard/cogs/stars/events.py)
+updates messages in real-time without concern for conflicting events or rate-limits,
+and no principles below are implemented.
+
 ## Worker Queue
 
 Whenever events are received that warrant a starboard message being
