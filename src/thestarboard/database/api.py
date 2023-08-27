@@ -214,6 +214,32 @@ class DatabaseClient:
         )
         return total or 0
 
+    # Starboard message methods
+
+    async def add_starboard_message(
+        self,
+        message_id: int,
+        star_message_id: int,
+    ):
+        """Inserts the given starboard message into the database.
+
+        Both message IDs must exist in the database beforehand.
+
+        """
+        await self.conn.execute(
+            "INSERT INTO starboard_message (message_id, star_message_id) "
+            "VALUES ($1, $2)",
+            message_id,
+            star_message_id,
+        )
+
+    async def get_starboard_message(self, message_id: int) -> int | None:
+        """Gets the starboard message associated with the given message ID."""
+        return await self.conn.fetchval(
+            "SELECT message_id FROM starboard_message WHERE star_message_id = $1",
+            message_id,
+        )
+
     # Starboard configuration methods
 
     async def get_starboard_channel(self, guild_id: int) -> int | None:
