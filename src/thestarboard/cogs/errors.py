@@ -152,7 +152,7 @@ class PrefixErrorHandler(ErrorHandler[Context]):
 class TreeErrorHandler(ErrorHandler[discord.Interaction]):
     responses = [
         ErrorResponse(
-            commands.CommandOnCooldown,
+            app_commands.CommandOnCooldown,
             "This command is on cooldown for {error.retry_after:.1f}s.",
             show_traceback=False,
         ),
