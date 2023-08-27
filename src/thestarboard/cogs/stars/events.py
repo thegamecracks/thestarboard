@@ -185,7 +185,9 @@ class StarboardEvents(commands.Cog):
     def _get_image_url(self, message: discord.Message) -> str | None:
         """Gets a suitable URL to use for the starboard image."""
         for attachment in message.attachments:
-            if attachment.content_type == "image":
+            if attachment.content_type is None:
+                continue
+            elif attachment.content_type.startswith("image"):
                 return attachment.url
 
         for embed in message.embeds:
