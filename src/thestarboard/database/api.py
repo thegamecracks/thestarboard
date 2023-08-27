@@ -285,7 +285,7 @@ class DatabaseClient:
         """
         await self.add_guild(guild_id)
         threshold = await self.conn.fetchval(
-            "SELECT starboard_threshold FROM starboard_guild_config "
+            "SELECT star_threshold FROM starboard_guild_config "
             "WHERE guild_id = $1",
             guild_id,
         )
@@ -306,7 +306,7 @@ class DatabaseClient:
         """
         await self.add_guild(guild_id)
         await self.conn.execute(
-            "UPDATE starboard_guild_config SET starboard_threshold = $1 "
+            "UPDATE starboard_guild_config SET star_threshold = $1 "
             "WHERE guild_id = $2",
             threshold,
             guild_id,
