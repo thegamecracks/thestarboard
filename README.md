@@ -8,6 +8,9 @@ Want to add translations? [Fork this repository], create a new branch,
 commit your PO files there, then make a pull request.
 See [discord.py-gettext-demo's onboarding] for more information.
 
+[Fork this repository]: https://docs.github.com/en/get-started/quickstart/contributing-to-projects
+[discord.py-gettext-demo's onboarding]: https://github.com/thegamecracks/discord.py-i18n-demo/blob/main/docs/en/onboarding.md
+
 ## Setup
 
 It is recommended to use [Docker Compose] for running this bot.
@@ -27,7 +30,7 @@ To start:
    token = "Bot token from https://discord.com/developers/applications"
    ```
 
-3. Create a [`.env`] file to be used by Docker Compose:
+3. Create a [.env] file to be used by Docker Compose:
 
    ```env
    PGPASSWORD=admin
@@ -47,13 +50,12 @@ python -m thestarboard
 
 Note that Python 3.11 or newer is required.
 
+[Docker Compose]: https://docs.docker.com/get-started/08_using_compose/
+[config.toml]: /src/thestarboard/config_default.toml
+[.env]: /example.env
+
 ## License
 
 This project uses the [MIT] License.
 
-[Docker Compose]: https://docs.docker.com/get-started/08_using_compose/
-[config.toml]: /src/thestarboard/config_default.toml
-[`.env`]: /example.env
-[Fork this repository]: https://docs.github.com/en/get-started/quickstart/contributing-to-projects
-[discord.py-gettext-demo's onboarding]: https://github.com/thegamecracks/discord.py-i18n-demo/blob/main/docs/en/onboarding.md
 [MIT]: /LICENSE
