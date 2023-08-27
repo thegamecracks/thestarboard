@@ -144,8 +144,8 @@ class StarboardEvents(commands.Cog):
         star_counts: dict[str, int] = {}
         query = (
             "SELECT emoji, COUNT(*) AS count FROM message_star "
-            "GROUP BY emoji "
-            "WHERE message_id = $1"
+            "WHERE message_id = $1 "
+            "GROUP BY emoji"
         )
         async for row in self.bot.query.conn.cursor(query, message_id):
             star_counts[row["emoji"]] = row["count"]
@@ -330,7 +330,7 @@ class StarboardEvents(commands.Cog):
         # TODO: add guild setting to disable auto-deletion
 
         # Filter message IDs for ones associated with a starboard message
-        async with self.bot.pool.acquire() as conn:
+        async with self.bot.pool.acquire() as conn, conn.transaction():
             query = (
                 "SELECT sm.message_id, m.channel_id FROM starboard_message sm "
                 "JOIN message m ON sm.message_id = m.id "
