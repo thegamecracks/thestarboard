@@ -2,13 +2,15 @@ import logging
 import random
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import ClassVar, Generic, Type, TypeVar
+from typing import Any, ClassVar, Generic, Type, TypeVar
 
 import discord
 from discord import app_commands
 from discord.ext import commands
 
 from thestarboard.bot import Bot, Context
+from thestarboard.errors import AppCommandResponse
+from thestarboard.translator import translate
 
 log = logging.getLogger(__name__)
 
@@ -33,9 +35,31 @@ class ErrorResponse:
     content: str | None
     show_traceback: bool
 
-    def format(self, error: Exception) -> str | None:
+    async def format(self, ctx: Any, error: Exception) -> str | None:
         if self.content is not None:
             return self.content.format(error=error)
+
+
+class AppCommandErrorResponse(ErrorResponse):
+    """A dedicated error formatter for :exc:`AppCommandResponse`."""
+
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(
+            AppCommandResponse,
+            None,
+            *args,
+            **kwargs,
+        )
+
+    async def format(
+        self,
+        ctx: discord.Interaction,
+        error: AppCommandResponse,
+    ) -> str | None:
+        message = error.message
+        if isinstance(message, app_commands.locale_str):
+            message = await translate(message, ctx, error.data)
+        return message
 
 
 class ErrorHandler(ABC, Generic[T]):
@@ -70,7 +94,7 @@ class ErrorHandler(ABC, Generic[T]):
 
         for resp in self.responses:
             if isinstance(error, resp.exc_types):
-                content = resp.format(error)
+                content = await resp.format(ctx, error)
                 break
         else:
             raise ValueError(f"Unable to handle exception: {error!r}")
@@ -151,6 +175,7 @@ class PrefixErrorHandler(ErrorHandler[Context]):
 
 class TreeErrorHandler(ErrorHandler[discord.Interaction]):
     responses = [
+        AppCommandErrorResponse(show_traceback=False),
         ErrorResponse(
             app_commands.CommandOnCooldown,
             "This command is on cooldown for {error.retry_after:.1f}s.",
