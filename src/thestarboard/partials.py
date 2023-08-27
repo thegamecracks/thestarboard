@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+import discord
+
 if TYPE_CHECKING:
     import asyncpg
-    import discord
 
     from .bot import Bot
 
@@ -34,7 +35,7 @@ class PartialResolver:
         """
         row = await self.conn.fetchrow(
             "SELECT m.channel_id, c.guild_id FROM message m "
-            "JOIN channel c ON m.channel_id = c.channel_id "
+            "JOIN channel c ON m.channel_id = c.id "
             "WHERE m.id = $1",
             message_id,
         )
