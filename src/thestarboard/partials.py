@@ -45,3 +45,20 @@ class PartialResolver:
             guild_id=row["guild_id"],
         )
         return channel.get_partial_message(message_id)
+
+    async def message(self, message_id: int) -> discord.Message | None:
+        """Attempts to resolve a full message via message cache and API request.
+
+        :param message_id: The ID of the message to fetch.
+        :returns: The message object, or None if not present in database.
+        :raises discord.HTTPException:
+            An error occurred while trying to fetch the message.
+
+        """
+        message = discord.utils.get(self.bot.cached_messages, id=message_id)
+        if message is not None:
+            return message
+
+        partial = await self.partial_message(message_id)
+        if partial is not None:
+            return await partial.fetch()
