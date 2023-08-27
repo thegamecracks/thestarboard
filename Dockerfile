@@ -20,10 +20,14 @@ FROM project-install-deps AS project
 
 WORKDIR /thestarboard
 
+RUN apk add --no-cache gettext
+
 COPY --link MANIFEST.in pyproject.toml setup.py ./
 COPY --link src/ src/
 # --no-build-isolation to avoid re-installing setuptools in pyproject.toml
 RUN pip install --no-build-isolation --no-index .
+
+RUN apk del gettext
 
 FROM project AS prod
 
