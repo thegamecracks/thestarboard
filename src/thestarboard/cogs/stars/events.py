@@ -256,6 +256,12 @@ class StarboardEvents(commands.Cog):
             if starboard_channel_id is None:
                 return
 
+            max_message_age = await query.get_max_starboard_age(guild_id)
+            created_at = discord.utils.snowflake_time(message_id)
+            now = discord.utils.utcnow()
+            if created_at < now - max_message_age:
+                return
+
             starboard_channel = self.bot.get_partial_messageable(starboard_channel_id)
 
             message = await self.bot.resolve.message(message_id)

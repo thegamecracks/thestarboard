@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import contextlib
+import datetime
 from contextvars import ContextVar
 from typing import TYPE_CHECKING, AsyncGenerator, Self
 
@@ -309,6 +310,43 @@ class DatabaseClient:
             "UPDATE starboard_guild_config SET star_threshold = $1 "
             "WHERE guild_id = $2",
             threshold,
+            guild_id,
+        )
+
+    async def get_max_starboard_age(self, guild_id: int) -> datetime.timedelta:
+        """Gets a guild's maximum starboard message age.
+
+        Missing guilds are automatically inserted.
+
+        """
+        await self.add_guild(guild_id)
+        max_message_age = await self.conn.fetchval(
+            "SELECT max_message_age FROM starboard_guild_config "
+            "WHERE guild_id = $1",
+            guild_id,
+        )
+        # starboard_guild_config_trigger should guarantee this
+        assert max_message_age is not None
+        return datetime.timedelta(seconds=max_message_age)
+
+    async def set_max_starboard_age(
+        self,
+        max_message_age: datetime.timedelta,
+        *,
+        guild_id: int,
+    ) -> None:
+        """Sets a guild's maximum starboard message age.
+
+        `max_message_age` will rounded down to the second.
+
+        Missing guilds are automatically inserted.
+
+        """
+        await self.add_guild(guild_id)
+        await self.conn.execute(
+            "UPDATE starboard_guild_config SET max_message_age = $1 "
+            "WHERE guild_id = $2",
+            int(max_message_age.total_seconds()),
             guild_id,
         )
 

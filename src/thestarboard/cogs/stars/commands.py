@@ -1,3 +1,4 @@
+import datetime
 from typing import cast
 
 import discord
@@ -6,7 +7,7 @@ from discord.app_commands import locale_str as _
 from discord.ext import commands
 
 from thestarboard.bot import Bot
-from thestarboard.translator import translate
+from thestarboard.translator import plural_locale_str as ngettext, translate
 
 
 class ThresholdTransformer(app_commands.Transformer):
@@ -43,7 +44,56 @@ class ThresholdTransformer(app_commands.Transformer):
         return value
 
 
+class MaxMessageAgeTransformer(app_commands.Transformer):
+    @property
+    def type(self) -> discord.AppCommandOptionType:
+        return discord.AppCommandOptionType.integer
+
+    @property
+    def min_value(self) -> int:
+        return 1
+
+    @property
+    def max_value(self) -> int:
+        return 30
+
+    async def autocomplete(
+        self,
+        interaction: discord.Interaction,
+        value: int,
+    ) -> list[app_commands.Choice[int]]:
+        assert interaction.guild is not None
+
+        bot = cast(Bot, interaction.client)
+        async with bot.query.acquire() as query:
+            max_age = await query.get_max_starboard_age(interaction.guild.id)
+
+        # Response to user when seeing the maximum starboard message age
+        message = await translate(
+            ngettext(
+                "Current max age: {0} day",
+                "Current max age: {0} days",
+            ),
+            interaction,
+            data=max_age.days,
+        )
+        message = message.format(max_age.days)
+
+        return [app_commands.Choice(name=message, value=max_age.days)]
+
+    async def transform(
+        self,
+        interaction: discord.Interaction,
+        value: int,
+    ) -> datetime.timedelta:
+        return datetime.timedelta(days=value)
+
+
 ThresholdTransform = app_commands.Transform[int, ThresholdTransformer]
+MaxMessageAgeTransform = app_commands.Transform[
+    datetime.timedelta,
+    MaxMessageAgeTransformer,
+]
 
 
 class StarboardCommands(commands.Cog):
@@ -152,4 +202,49 @@ class StarboardCommands(commands.Cog):
 
             content = await translate(response_key, interaction)
             content = content.format(threshold)
+            await interaction.response.send_message(content, ephemeral=True)
+
+    @config.command(
+        # Subcommand name (/config set-max-age)
+        name=_("set-max-age"),
+        # Subcommand description (/config set-max-age)
+        description=_("Sets the maximum age allowed for new starboard messages."),
+    )
+    @app_commands.rename(
+        # Subcommand parameter name (/config set-max-age [max-age])
+        max_age=_("max-age"),
+    )
+    @app_commands.describe(
+        # Subcommand parameter description (/config set-max-age [max-age])
+        max_age=_("The maximum age in days."),
+    )
+    async def config_set_max_age(
+        self,
+        interaction: discord.Interaction,
+        max_age: MaxMessageAgeTransform,
+    ):
+        assert interaction.guild is not None
+        guild_id = interaction.guild.id
+
+        async with self.bot.query.acquire() as query:
+            original_age = await query.get_max_starboard_age(guild_id)
+            age_changed = max_age != original_age
+
+            if age_changed:
+                await query.set_max_starboard_age(max_age, guild_id=guild_id)
+
+                # Response from /config set-max-age
+                response_key = ngettext(
+                    "Successfully set the maximum age to {0} day!",
+                    "Successfully set the maximum age to {0} days!",
+                )
+            else:
+                # Response from /config set-max-age
+                response_key = ngettext(
+                    "The current maximum age is {0} day!",
+                    "The current maximum age is {0} days!",
+                )
+
+            content = await translate(response_key, interaction, data=max_age.days)
+            content = content.format(max_age.days)
             await interaction.response.send_message(content, ephemeral=True)
