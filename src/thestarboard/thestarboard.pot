@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-26 12:11-0400\n"
+"POT-Creation-Date: 2023-08-27 15:16-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,54 +35,92 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#. Response to user when seeing the star threshold
+#: src/thestarboard/cogs/stars/commands.py:37
+#, python-brace-format
+msgid "Current star threshold: {0}"
+msgstr ""
+
 #. Command group name (/config)
-#: src/thestarboard/cogs/stars/commands.py:16
+#: src/thestarboard/cogs/stars/commands.py:55
 msgid "config"
 msgstr ""
 
 #. Command group description (/config)
-#: src/thestarboard/cogs/stars/commands.py:18
+#: src/thestarboard/cogs/stars/commands.py:57
 msgid "Starboard configuration."
 msgstr ""
 
 #. Subcommand name (/config set-channel)
-#: src/thestarboard/cogs/stars/commands.py:25
+#: src/thestarboard/cogs/stars/commands.py:64
 msgid "set-channel"
 msgstr ""
 
 #. Subcommand description (/config set-channel)
-#: src/thestarboard/cogs/stars/commands.py:27
+#: src/thestarboard/cogs/stars/commands.py:66
 msgid "Sets the starboard channel to send messages to."
 msgstr ""
 
 #. Subcommand parameter name (/config set-channel [channel])
-#: src/thestarboard/cogs/stars/commands.py:31
+#: src/thestarboard/cogs/stars/commands.py:70
 msgid "channel"
 msgstr ""
 
 #. Subcommand parameter description (/config set-channel [channel])
-#: src/thestarboard/cogs/stars/commands.py:35
+#: src/thestarboard/cogs/stars/commands.py:74
 msgid "The channel to send starboard messages to."
 msgstr ""
 
 #. Response from /config set-channel
-#: src/thestarboard/cogs/stars/commands.py:62
+#: src/thestarboard/cogs/stars/commands.py:102
 #, python-brace-format
 msgid "Successfully set the starboard channel to {0}!"
 msgstr ""
 
 #. Response from /config set-channel
-#: src/thestarboard/cogs/stars/commands.py:64
+#: src/thestarboard/cogs/stars/commands.py:104
 msgid "Successfully unset the starboard channel!"
 msgstr ""
 
 #. Response from /config set-channel
-#: src/thestarboard/cogs/stars/commands.py:66
+#: src/thestarboard/cogs/stars/commands.py:106
 #, python-brace-format
 msgid "{0} is already the starboard channel!"
 msgstr ""
 
 #. Response from /config set-channel
-#: src/thestarboard/cogs/stars/commands.py:68
+#: src/thestarboard/cogs/stars/commands.py:108
 msgid "There is already no starboard channel set!"
+msgstr ""
+
+#. Subcommand name (/config set-threshold)
+#: src/thestarboard/cogs/stars/commands.py:120
+msgid "set-threshold"
+msgstr ""
+
+#. Subcommand description (/config set-threshold)
+#: src/thestarboard/cogs/stars/commands.py:122
+msgid "Sets the number of stars required for a message to be pinned."
+msgstr ""
+
+#. Subcommand parameter name (/config set-threshold [threshold])
+#: src/thestarboard/cogs/stars/commands.py:126
+msgid "threshold"
+msgstr ""
+
+#. Subcommand parameter description (/config set-threshold [threshold])
+#: src/thestarboard/cogs/stars/commands.py:130
+msgid "The number of stars required."
+msgstr ""
+
+#. Response from /config set-threshold
+#: src/thestarboard/cogs/stars/commands.py:148
+#, python-brace-format
+msgid "Successfully set the star threshold to {0}!"
+msgstr ""
+
+#. Response from /config set-threshold
+#: src/thestarboard/cogs/stars/commands.py:151
+#, python-brace-format
+msgid "The current star threshold is {0}!"
 msgstr ""
