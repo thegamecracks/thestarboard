@@ -9,6 +9,9 @@ from thestarboard.bot import Bot
 class StarboardEvents(commands.Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
+        # TODO: use expiring cache for _user_id_bots
+        self._user_id_bots: dict[int, bool] = {}
+        # TODO: cache starboard message IDs for filtering events
 
     @commands.Cog.listener("on_raw_reaction_add")
     async def add_star_reaction(self, payload: discord.RawReactionActionEvent):
@@ -16,6 +19,8 @@ class StarboardEvents(commands.Cog):
         if payload.guild_id is None:
             return
         if not self._is_star_emoji(payload.emoji):
+            return
+        if await self._is_bot_user(payload.user_id):
             return
 
         async with self.bot.query.acquire() as query:
@@ -38,6 +43,8 @@ class StarboardEvents(commands.Cog):
         if payload.guild_id is None:
             return
         if not self._is_star_emoji(payload.emoji):
+            return
+        if await self._is_bot_user(payload.user_id):
             return
 
         async with self.bot.query.acquire() as query:
@@ -129,8 +136,20 @@ class StarboardEvents(commands.Cog):
                 guild_id=payload.guild_id,
             )
 
+    # Event filtering methods
+
     def _is_star_emoji(self, emoji: discord.PartialEmoji) -> bool:
         return str(emoji) in self.bot.config.starboard.allowed_emojis
+
+    async def _is_bot_user(self, user_id: int) -> bool:
+        """Checks if a user ID points to a bot account."""
+        cached = self._user_id_bots.get(user_id)
+        if cached is not None:
+            return cached
+
+        user = self.bot.get_user(user_id) or await self.bot.fetch_user(user_id)
+        self._user_id_bots[user_id] = user.bot
+        return user.bot
 
     # Starboard content formatting
 
