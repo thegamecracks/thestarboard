@@ -1,0 +1,168 @@
+# thestarboard
+# Copyright (C) 2023 thegamecracks
+# This file is distributed under the same license as the thestarboard package.
+#
+# The following requirements must be met when providing translations for
+# certain strings:
+#
+# * Command name
+# * Command group name
+# * Command parameter name
+# * Subcommand name
+# * Subcommand group name
+# * Subcommand parameter name
+#   - Lowercase variants of characters must be used
+#   - No spaces allowed, use "-" or "_" instead ("-" is preferred)
+#   - Max length of 32 characters
+#
+# * Command description
+# * Command group description
+# * Command parameter description
+# * Subcommand description
+# * Subcommand group description
+# * Subcommand parameter description
+#   - Max length of 100 characters
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-08-27 16:44-0400\n"
+"PO-Revision-Date: 2023-08-27 16:40-0400\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: English\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. Response to user when seeing the star threshold
+#: src/thestarboard/cogs/stars/commands.py:38
+#, python-brace-format
+msgid "Current star threshold: {0}"
+msgstr "Current star threshold: {0}"
+
+#: src/thestarboard/cogs/stars/commands.py:74
+#, python-brace-format
+msgid "Current max age: {0} day"
+msgid_plural "Current max age: {0} days"
+msgstr[0] "Current max age: {0} day"
+msgstr[1] "Current max age: {0} days"
+
+#. Command group name (/config)
+#: src/thestarboard/cogs/stars/commands.py:105
+msgid "config"
+msgstr "config"
+
+#. Command group description (/config)
+#: src/thestarboard/cogs/stars/commands.py:107
+msgid "Starboard configuration."
+msgstr "Starboard configuration."
+
+#. Subcommand name (/config set-channel)
+#: src/thestarboard/cogs/stars/commands.py:114
+msgid "set-channel"
+msgstr "set-channel"
+
+#. Subcommand description (/config set-channel)
+#: src/thestarboard/cogs/stars/commands.py:116
+msgid "Sets the starboard channel to send messages to."
+msgstr "Sets the starboard channel to send messages to."
+
+#. Subcommand parameter name (/config set-channel [channel])
+#: src/thestarboard/cogs/stars/commands.py:120
+msgid "channel"
+msgstr "channel"
+
+#. Subcommand parameter description (/config set-channel [channel])
+#: src/thestarboard/cogs/stars/commands.py:124
+msgid "The channel to send starboard messages to."
+msgstr "The channel to send starboard messages to."
+
+#. Response from /config set-channel
+#: src/thestarboard/cogs/stars/commands.py:152
+#, python-brace-format
+msgid "Successfully set the starboard channel to {0}!"
+msgstr "Successfully set the starboard channel to {0}!"
+
+#. Response from /config set-channel
+#: src/thestarboard/cogs/stars/commands.py:154
+msgid "Successfully unset the starboard channel!"
+msgstr "Successfully unset the starboard channel!"
+
+#. Response from /config set-channel
+#: src/thestarboard/cogs/stars/commands.py:156
+#, python-brace-format
+msgid "{0} is already the starboard channel!"
+msgstr "{0} is already the starboard channel!"
+
+#. Response from /config set-channel
+#: src/thestarboard/cogs/stars/commands.py:158
+msgid "There is already no starboard channel set!"
+msgstr "There is already no starboard channel set!"
+
+#. Subcommand name (/config set-threshold)
+#: src/thestarboard/cogs/stars/commands.py:170
+msgid "set-threshold"
+msgstr "set-threshold"
+
+#. Subcommand description (/config set-threshold)
+#: src/thestarboard/cogs/stars/commands.py:172
+msgid "Sets the number of stars required for a message to be pinned."
+msgstr "Sets the number of stars required for a message to be pinned."
+
+#. Subcommand parameter name (/config set-threshold [threshold])
+#: src/thestarboard/cogs/stars/commands.py:176
+msgid "threshold"
+msgstr "threshold"
+
+#. Subcommand parameter description (/config set-threshold [threshold])
+#: src/thestarboard/cogs/stars/commands.py:180
+msgid "The number of stars required."
+msgstr "The number of stars required."
+
+#. Response from /config set-threshold
+#: src/thestarboard/cogs/stars/commands.py:198
+#, python-brace-format
+msgid "Successfully set the star threshold to {0}!"
+msgstr "Successfully set the star threshold to {0}!"
+
+#. Response from /config set-threshold
+#: src/thestarboard/cogs/stars/commands.py:201
+#, python-brace-format
+msgid "The current star threshold is {0}!"
+msgstr "The current star threshold is {0}!"
+
+#. Subcommand name (/config set-max-age)
+#: src/thestarboard/cogs/stars/commands.py:209
+msgid "set-max-age"
+msgstr "set-max-age"
+
+#. Subcommand description (/config set-max-age)
+#: src/thestarboard/cogs/stars/commands.py:211
+msgid "Sets the maximum age allowed for new starboard messages."
+msgstr "Sets the maximum age allowed for new starboard messages."
+
+#. Subcommand parameter name (/config set-max-age [max-age])
+#: src/thestarboard/cogs/stars/commands.py:215
+msgid "max-age"
+msgstr "max-age"
+
+#. Subcommand parameter description (/config set-max-age [max-age])
+#: src/thestarboard/cogs/stars/commands.py:219
+msgid "The maximum age in days."
+msgstr "The maximum age in days."
+
+#: src/thestarboard/cogs/stars/commands.py:238
+#, python-brace-format
+msgid "Successfully set the maximum age to {0} day!"
+msgid_plural "Successfully set the maximum age to {0} days!"
+msgstr[0] "Successfully set the maximum age to {0} day!"
+msgstr[1] "Successfully set the maximum age to {0} days!"
+
+#: src/thestarboard/cogs/stars/commands.py:244
+#, python-brace-format
+msgid "The current maximum age is {0} day!"
+msgid_plural "The current maximum age is {0} days!"
+msgstr[0] "The current maximum age is {0} day!"
+msgstr[1] "The current maximum age is {0} days!"
