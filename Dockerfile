@@ -1,7 +1,8 @@
 FROM python:3.11-alpine AS apt-deps
 
 # Required for direct references to git repositories in requirements.txt
-RUN apk add --no-cache git
+RUN --mount=type=cache,target=/var/cache/apk \
+    apk add git
 
 FROM apt-deps AS project-download-deps
 
@@ -20,7 +21,8 @@ FROM project-install-deps AS project
 
 WORKDIR /thestarboard
 
-RUN apk add --no-cache gettext
+RUN --mount=type=cache,target=/var/cache/apk \
+    apk add gettext
 
 COPY --link MANIFEST.in pyproject.toml setup.py ./
 COPY --link src/ src/
