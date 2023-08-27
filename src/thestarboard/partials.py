@@ -25,11 +25,13 @@ class PartialResolver:
         """A shorthand for ``self.bot.query.conn``."""
         return self.bot.query.conn
 
-    async def partial_message(
-        self,
-        message_id: int,
-    ) -> discord.PartialMessage | None:
-        """Attempts to resolve a partial message by ID."""
+    async def partial_message(self, message_id: int) -> discord.PartialMessage | None:
+        """Attempts to resolve a partial message by ID.
+
+        :param message_id: The ID of the message to fetch.
+        :returns: A partial message object, or None if not present in database.
+
+        """
         row = await self.conn.fetchrow(
             "SELECT m.channel_id, c.guild_id FROM message m "
             "JOIN channel c ON m.channel_id = c.channel_id "
