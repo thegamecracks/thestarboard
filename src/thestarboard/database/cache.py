@@ -51,8 +51,9 @@ class ExpiringMemoryCacheSet(CacheSet):
     """
 
     def __init__(self, *, expires_after: float) -> None:
-        self._key_expirations: dict[str, float] = {}
         self.expires_after = expires_after
+        self._key_expirations: dict[str, float] = {}
+        self._next_integrity_check: float = self._time()
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         self._key_expirations.clear()
@@ -60,8 +61,25 @@ class ExpiringMemoryCacheSet(CacheSet):
     def _time(self) -> float:
         return time.monotonic()
 
+    def _verify_integrity(self, now: float) -> None:
+        if now < self._next_integrity_check:
+            return
+
+        self._next_integrity_check = now + self.expires_after
+
+        to_remove = []
+        for key, expiration in self._key_expirations.items():
+            if expiration >= now:
+                to_remove.append(key)
+
+        for key in to_remove:
+            self._key_expirations.pop(key)
+
     async def add(self, key: str) -> None:
-        self._key_expirations[key] = self._time() + self.expires_after
+        now = self._time()
+        self._verify_integrity(now)
+        if not await self.exists(key):
+            self._key_expirations[key] = now + self.expires_after
 
     async def discard(self, key: str) -> None:
         self._key_expirations.pop(key, None)
