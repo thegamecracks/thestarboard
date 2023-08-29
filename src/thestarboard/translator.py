@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Any, Iterator
 
 import discord
 from discord import app_commands
+from discord.app_commands import TranslationContextLocation
 from discord.ext import commands
 
 if TYPE_CHECKING:
@@ -78,10 +79,17 @@ class GettextTranslator(app_commands.Translator):
 
         plural: str | None = string.extras.get("plural")
         if plural is not None:
-            assert isinstance(context.data, int)
-            translated = t.ngettext(string.message, plural, context.data)
+            if context.location == TranslationContextLocation.choice_name:
+                quantity = context.data.value
+            else:
+                quantity = context.data
+            assert isinstance(quantity, int)
+            translated = t.ngettext(string.message, plural, quantity)
         else:
             translated = t.gettext(string.message)
+
+        if context.location == TranslationContextLocation.choice_name:
+            translated = translated.format(context.data.value)
 
         return translated or None
 

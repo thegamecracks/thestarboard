@@ -34,14 +34,17 @@ class ThresholdTransformer(app_commands.Transformer):
         async with bot.query.acquire() as query:
             threshold = await query.get_starboard_threshold(interaction.guild.id)
 
-        # Response to user when seeing the star threshold
-        message = await translate(_("Current star threshold: {0}"), interaction)
-        message = message.format(threshold)
+        choices = [
+            app_commands.Choice(
+                # Response to user when seeing the star threshold
+                name=_("Current star threshold: {0}"),
+                value=threshold,
+            ),
+        ]
 
-        choices = []
         if value != "":
-            choices.append(app_commands.Choice(name=str(value), value=value))
-        choices.append(app_commands.Choice(name=message, value=threshold))
+            choices.insert(0, app_commands.Choice(name=str(value), value=value))
+
         return choices
 
     async def transform(self, interaction: discord.Interaction, value: int) -> int:
@@ -72,21 +75,20 @@ class MaxMessageAgeTransformer(app_commands.Transformer):
         async with bot.query.acquire() as query:
             max_age = await query.get_max_starboard_age(interaction.guild.id)
 
-        message = await translate(
-            ngettext(
-                # Response to user when seeing the maximum starboard message age
-                "Current max age: {0} day",
-                "Current max age: {0} days",
-            ),
-            interaction,
-            data=max_age.days,
-        )
-        message = message.format(max_age.days)
+        choices = [
+            app_commands.Choice(
+                name=ngettext(
+                    # Response to user when seeing the maximum starboard message age
+                    "Current max age: {0} day",
+                    "Current max age: {0} days",
+                ),
+                value=max_age.days,
+            )
+        ]
 
-        choices = []
         if value != "":
-            choices.append(app_commands.Choice(name=str(value), value=value))
-        choices.append(app_commands.Choice(name=message, value=max_age.days))
+            choices.insert(0, app_commands.Choice(name=str(value), value=value))
+
         return choices
 
     async def transform(
