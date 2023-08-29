@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.2.0a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-27 16:44-0400\n"
+"POT-Creation-Date: 2023-08-29 11:22-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,6 +41,7 @@ msgstr ""
 msgid "Current star threshold: {0}"
 msgstr ""
 
+#. Response to user when seeing the maximum starboard message age
 #: src/thestarboard/cogs/stars/commands.py:74
 #, python-brace-format
 msgid "Current max age: {0} day"
@@ -152,6 +153,7 @@ msgstr ""
 msgid "The maximum age in days."
 msgstr ""
 
+#. Response from /config set-max-age
 #: src/thestarboard/cogs/stars/commands.py:238
 #, python-brace-format
 msgid "Successfully set the maximum age to {0} day!"
@@ -159,6 +161,7 @@ msgid_plural "Successfully set the maximum age to {0} days!"
 msgstr[0] ""
 msgstr[1] ""
 
+#. Response from /config set-max-age
 #: src/thestarboard/cogs/stars/commands.py:244
 #, python-brace-format
 msgid "The current maximum age is {0} day!"

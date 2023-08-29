@@ -68,9 +68,9 @@ class MaxMessageAgeTransformer(app_commands.Transformer):
         async with bot.query.acquire() as query:
             max_age = await query.get_max_starboard_age(interaction.guild.id)
 
-        # Response to user when seeing the maximum starboard message age
         message = await translate(
             ngettext(
+                # Response to user when seeing the maximum starboard message age
                 "Current max age: {0} day",
                 "Current max age: {0} days",
             ),
@@ -233,14 +233,14 @@ class StarboardCommands(commands.Cog):
             if age_changed:
                 await query.set_max_starboard_age(max_age, guild_id=guild_id)
 
-                # Response from /config set-max-age
                 response_key = ngettext(
+                    # Response from /config set-max-age
                     "Successfully set the maximum age to {0} day!",
                     "Successfully set the maximum age to {0} days!",
                 )
             else:
-                # Response from /config set-max-age
                 response_key = ngettext(
+                    # Response from /config set-max-age
                     "The current maximum age is {0} day!",
                     "The current maximum age is {0} days!",
                 )
