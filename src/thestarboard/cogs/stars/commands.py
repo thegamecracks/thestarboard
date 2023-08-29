@@ -1,5 +1,5 @@
 import datetime
-from typing import cast
+from typing import Literal, cast
 
 import discord
 from discord import app_commands
@@ -26,7 +26,7 @@ class ThresholdTransformer(app_commands.Transformer):
     async def autocomplete(
         self,
         interaction: discord.Interaction,
-        value: int,
+        value: int | Literal[""],
     ) -> list[app_commands.Choice[int]]:
         assert interaction.guild is not None
 
@@ -38,7 +38,11 @@ class ThresholdTransformer(app_commands.Transformer):
         message = await translate(_("Current star threshold: {0}"), interaction)
         message = message.format(threshold)
 
-        return [app_commands.Choice(name=message, value=threshold)]
+        choices = []
+        if value != "":
+            choices.append(app_commands.Choice(name=str(value), value=value))
+        choices.append(app_commands.Choice(name=message, value=threshold))
+        return choices
 
     async def transform(self, interaction: discord.Interaction, value: int) -> int:
         return value
@@ -60,7 +64,7 @@ class MaxMessageAgeTransformer(app_commands.Transformer):
     async def autocomplete(
         self,
         interaction: discord.Interaction,
-        value: int,
+        value: int | Literal[""],
     ) -> list[app_commands.Choice[int]]:
         assert interaction.guild is not None
 
@@ -79,7 +83,11 @@ class MaxMessageAgeTransformer(app_commands.Transformer):
         )
         message = message.format(max_age.days)
 
-        return [app_commands.Choice(name=message, value=max_age.days)]
+        choices = []
+        if value != "":
+            choices.append(app_commands.Choice(name=str(value), value=value))
+        choices.append(app_commands.Choice(name=message, value=max_age.days))
+        return choices
 
     async def transform(
         self,
