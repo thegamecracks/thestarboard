@@ -1,6 +1,6 @@
 .python-version
 .vscode
-config.toml
+/config*.toml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
