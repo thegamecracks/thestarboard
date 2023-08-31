@@ -17,7 +17,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["black>=23.7.0"]
-jishaku = ["jishaku @ git+https://github.com/Gorialis/jishaku@4590932f56a0e5a33b15d1c536955d4898d6b04e"]
+jishaku = ["jishaku @ https://github.com/Gorialis/jishaku/archive/4590932f56a0e5a33b15d1c536955d4898d6b04e.tar.gz"]
 
 [tool.setuptools.dynamic]
 version = { attr = "thestarboard.__version__" }
