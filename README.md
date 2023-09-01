@@ -1,6 +1,7 @@
 # thestarboard
 
-A starboard discord bot written in Python.
+A discord bot for providing democratic preservation of memorable messages
+in a starboard channel!
 
 ![Depiction of a user's cat post starred in a starboard channel](/images/demo.png)
 
