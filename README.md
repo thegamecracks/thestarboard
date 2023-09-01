@@ -2,6 +2,10 @@
 
 A starboard discord bot written in Python.
 
+![Depiction of a user's cat post starred in a starboard channel](/images/demo.png)
+
+(Photographed by [Makia Minich](https://commons.wikimedia.org/w/index.php?curid=81366278), CC-BY-SA 3.0)
+
 ## Contributing
 
 Want to add translations? [Fork this repository], create a new branch,
