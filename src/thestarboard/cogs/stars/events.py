@@ -275,7 +275,7 @@ class StarboardEvents(commands.Cog):
 
             try:
                 starboard_message = await starboard_channel.send(content, embed=embed)
-            except discord.Forbidden:
+            except (discord.Forbidden, discord.NotFound):
                 await query.set_starboard_channel(None, guild_id=guild_id)
             else:
                 await query.add_message(
