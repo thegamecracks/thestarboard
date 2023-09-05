@@ -14,7 +14,7 @@ _current_conn: ContextVar[asyncpg.Connection] = ContextVar("_current_conn")
 
 
 class DatabaseClient:
-    """Provides an API for making common queries with an :class:`asyncpg.Connection`."""
+    """Provides an API for making common queries with an :class:`asyncpg.Pool`."""
 
     def __init__(
         self,
