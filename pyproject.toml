@@ -11,15 +11,13 @@ readme = "README.md"
 dynamic = ["version"]
 dependencies = [
     "asyncpg==0.28.0",
+    "asyncpg-stubs~=0.28.0",
     "discord.py~=2.3",
     "pydantic~=2.3",
 ]
 
 [project.optional-dependencies]
-dev = [
-    "asyncpg-stubs~=0.28.0",
-    "black>=23.7.0",
-]
+dev = ["black>=23.7.0"]
 jishaku = ["jishaku @ https://github.com/Gorialis/jishaku/archive/4590932f56a0e5a33b15d1c536955d4898d6b04e.tar.gz"]
 
 [tool.setuptools.dynamic]
