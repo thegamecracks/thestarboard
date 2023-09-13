@@ -8,7 +8,7 @@ FROM apt-deps AS project-download-deps
 
 COPY requirements.txt ./
 RUN --mount=type=cache,target=/root/.cache \
-    pip download --dest pip-deps -r requirements.txt
+    pip wheel --wheel-dir pip-deps -r requirements.txt
 
 FROM python:3.11-alpine AS project-install-deps
 
